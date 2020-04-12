@@ -26,7 +26,7 @@ public interface SavedArticleDao {
     @Query("DELETE FROM saved_table")
     void deleteAllSavedArticles();
 
-    @Query("SELECT * FROM saved_table ORDER BY id desc")
+    @Query("SELECT * FROM saved_table ORDER BY id asc")
     LiveData<List<SavedArticle>> getAllSavedArticles();
 
 }

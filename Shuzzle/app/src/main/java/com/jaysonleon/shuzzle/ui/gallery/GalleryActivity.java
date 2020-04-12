@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,7 +47,7 @@ public class GalleryActivity extends AppCompatActivity {
         });
 
         this.recyclerView = findViewById(R.id.gallery_recyclerview);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.recyclerView.setLayoutManager(new GridLayoutManager(this,2));
 
         savedArticleViewModel = ViewModelProviders.of(this).get(SavedArticleViewModel.class);
     }
@@ -61,7 +63,7 @@ public class GalleryActivity extends AppCompatActivity {
             }
         });
 
-        this.adapter = new SavedArticleAdapter();
+        this.adapter = new SavedArticleAdapter(GalleryActivity.this, this.savedArticleViewModel);
         this.recyclerView.setAdapter(this.adapter);
     }
 }

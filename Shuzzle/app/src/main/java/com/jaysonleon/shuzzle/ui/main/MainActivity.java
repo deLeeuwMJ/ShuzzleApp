@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.textview.MaterialTextView;
 import com.jaysonleon.shuzzle.R;
@@ -23,7 +24,6 @@ import com.jaysonleon.shuzzle.model.subreddit.CategoryEnum;
 import com.jaysonleon.shuzzle.ui.gallery.GalleryActivity;
 import com.jaysonleon.shuzzle.util.ArticleUtil;
 import com.jaysonleon.shuzzle.util.SubRedditUtil;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
         this.articleViewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
         this.savedArticleViewModel = ViewModelProviders.of(this).get(SavedArticleViewModel.class);
         this.articleViewModel.deleteAllEvents();
-        this.savedArticleViewModel.deleteAllEvents();
     }
 
     @Override
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
 
     private void updateData() {
         if (this.currentImageId < this.dataSet.size()) {
-            Picasso.get()
+            Glide.with(MainActivity.this)
                     .load(this.dataSet.get(this.currentImageId).getUrl())
                     .into(this.image_v);
 
@@ -158,10 +157,13 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
         if (this.dataSet.size() - this.currentImageId <= 5) {
             ArticleUtil.requestApiData(
                     new WebApiRequest(
-                            SubRedditUtil.retrieveSubReddits(MainActivity.this, CategoryEnum.MAN_MADE),
+                            SubRedditUtil.retrieveSubReddits(
+                                    MainActivity.this,
+                                    CategoryEnum.MAN_MADE
+                            ),
                             "",
-                            "random",
-                            5
+                            "rio",
+                            25
                     ),
                     MainActivity.this,
                     MainActivity.this);
