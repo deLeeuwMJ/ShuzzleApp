@@ -5,6 +5,7 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.jaysonleon.shuzzle.model.webapi.WebApiRequest;
 import com.jaysonleon.shuzzle.model.article.Article;
 import com.jaysonleon.shuzzle.model.article.ArticleViewModel;
 import com.jaysonleon.shuzzle.model.subreddit.CategoryEnum;
+import com.jaysonleon.shuzzle.ui.gallery.GalleryActivity;
 import com.jaysonleon.shuzzle.util.ArticleUtil;
 import com.jaysonleon.shuzzle.util.SubRedditUtil;
 import com.squareup.picasso.Picasso;
@@ -33,10 +35,9 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
     private ArticleViewModel articleViewModel;
     private SavedArticleViewModel savedArticleViewModel;
     private List<Article> dataSet;
-    private List<SavedArticle> savedDataSet;
     private PhotoView image_v;
     private MaterialTextView title_tv;
-    private AppCompatImageButton left_ib, right_ib;
+    private AppCompatImageButton left_ib, right_ib, left_tb, right_tb;
     private int currentImageId;
 
     @Override
@@ -46,14 +47,20 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
 
         this.currentImageId = -1;
         this.dataSet = new LinkedList<>();
-        this.savedDataSet = new LinkedList<>();
         this.image_v = findViewById(R.id.main_rounded_image);
         this.title_tv = findViewById(R.id.main_picture_title);
         this.left_ib = findViewById(R.id.main_left_image_button);
         this.right_ib = findViewById(R.id.main_right_image_button);
+        this.left_tb = findViewById(R.id.toolbar_left_button);
+        this.right_tb = findViewById(R.id.toolbar_right_button);
 
         this.left_ib.setOnClickListener(MainActivity.this);
         this.right_ib.setOnClickListener(MainActivity.this);
+        this.left_tb.setOnClickListener(MainActivity.this);
+        this.right_tb.setOnClickListener(MainActivity.this);
+
+        this.left_tb.setVisibility(View.VISIBLE);
+        this.right_tb.setVisibility(View.VISIBLE);
 
         this.articleViewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
         this.savedArticleViewModel = ViewModelProviders.of(this).get(SavedArticleViewModel.class);
@@ -71,13 +78,6 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
                 dataSet = articles;
             }
         });
-
-        this.savedArticleViewModel.getAllEvents().observe(this, new Observer<List<SavedArticle>>() {
-            @Override
-            public void onChanged(List<SavedArticle> articles) {
-                savedDataSet = articles;
-            }
-        });
     }
 
     @Override
@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
 
         for (Article article : articles) {
             this.articleViewModel.insert(article);
-//            Log.i(TAG, article.getUrl());
         }
     }
 
@@ -108,6 +107,14 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.toolbar_left_button:
+                Intent intent = new Intent(MainActivity.this, GalleryActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                return;
+            case R.id.toolbar_right_button:
+
+                return;
             case R.id.main_left_image_button:
                 if (this.dataSet.size() > 3 && this.dataSet.size() - this.currentImageId >= 3) {
                     this.articleViewModel.delete(dataSet.get(currentImageId));
@@ -151,10 +158,10 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
         if (this.dataSet.size() - this.currentImageId <= 5) {
             ArticleUtil.requestApiData(
                     new WebApiRequest(
-                            SubRedditUtil.retrieveSubReddits(MainActivity.this, CategoryEnum.NATURE),
+                            SubRedditUtil.retrieveSubReddits(MainActivity.this, CategoryEnum.MAN_MADE),
                             "",
                             "random",
-                            50
+                            5
                     ),
                     MainActivity.this,
                     MainActivity.this);
