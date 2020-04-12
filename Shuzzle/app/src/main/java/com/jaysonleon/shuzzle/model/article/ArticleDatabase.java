@@ -9,12 +9,16 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Article.class}, version = 1, exportSchema = false)
+import com.jaysonleon.shuzzle.model.gallery.SavedArticle;
+import com.jaysonleon.shuzzle.model.gallery.SavedArticleDao;
+
+@Database(entities = {Article.class, SavedArticle.class}, version = 1, exportSchema = false)
 public abstract class ArticleDatabase extends RoomDatabase {
 
     private static ArticleDatabase instance;
 
-    public abstract ArticleDao eventDao();
+    public abstract ArticleDao retrievedDao();
+    public abstract SavedArticleDao savedDao();
 
     public static synchronized ArticleDatabase getInstance(Context context) {
         if (instance == null) {
@@ -36,10 +40,12 @@ public abstract class ArticleDatabase extends RoomDatabase {
     };
 
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
-        private ArticleDao articleDao;
+        private ArticleDao retrievedDao;
+        private SavedArticleDao savedDao;
 
         private PopulateDbAsyncTask(ArticleDatabase db) {
-            articleDao = db.eventDao();
+            retrievedDao = db.retrievedDao();
+            savedDao = db.savedDao();
         }
 
         @Override

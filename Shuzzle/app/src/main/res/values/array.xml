@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="Category_ManMade">
+        <item>MachinePorn</item>
+        <item>AbandonedPorn</item>
+        <item>ArtefactPorn</item>
+        <item>CozyPlaces</item>
+        <item>CarPorn</item>
+        <item>RoomPorn</item>
+        <item>DesignPorn</item>
+    </string-array>
+    <string-array name="Category_Art">
+        <item>ArtPorn</item>
+        <item>Art</item>
+        <item>Graffiti</item>
+        <item>itookapicture</item>
+        <item>ImaginaryLandscapes</item>
+        <item>Cinemagraphs</item>
+        <item>ExposurePorn</item>
+    </string-array>
+    <string-array name="Category_Animals">
+        <item>likeus</item>
+        <item>AnimalsBeingDerps</item>
+        <item>AnimalsBeingBros</item>
+        <item>WhatsWrongWithYourDog</item>
+        <item>Eyebleach</item>
+        <item>AnimalsBeingJerks</item>
+        <item>aww</item>
+    </string-array>
+    <string-array name="Category_Nature">
+        <item>EarthPorn</item>
+        <item>MacroPorn</item>
+        <item>spaceporn</item>
+        <item>SkyPorn</item>
+        <item>winterporn</item>
+    </string-array>
+    <string-array name="Category_Food">
+        <item>meat</item>
+        <item>DessertPorn</item>
+        <item>burgers</item>
+        <item>Breadit</item>
+        <item>smoking</item>
+    </string-array>
+</resources>

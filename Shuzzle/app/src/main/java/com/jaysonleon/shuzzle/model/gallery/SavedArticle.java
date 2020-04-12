@@ -1,12 +1,12 @@
-package com.jaysonleon.shuzzle.model.article;
+package com.jaysonleon.shuzzle.model.gallery;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "retrieved_table")
-public class Article implements Serializable {
+@Entity(tableName = "saved_table")
+public class SavedArticle implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -17,7 +17,7 @@ public class Article implements Serializable {
     private String url;
     private String image;
 
-    public Article(String subreddit, String title, int created, String url, String image) {
+    public SavedArticle(String subreddit, String title, int created, String url, String image) {
         this.subreddit = subreddit;
         this.title = title;
         this.created = created;

@@ -1,4 +1,4 @@
-package com.jaysonleon.shuzzle.model.article;
+package com.jaysonleon.shuzzle.model.webapi;
 
 import android.content.Context;
 import android.util.Log;

@@ -14,8 +14,8 @@ public class ArticleRepository {
 
     public ArticleRepository(Application application) {
         ArticleDatabase database = ArticleDatabase.getInstance(application);
-        articleDao = database.eventDao();
-        allArticles = articleDao.getAllArticles();
+        articleDao = database.retrievedDao();
+        allArticles = articleDao.getAllRetrievedArticles();
     }
 
     public void insert(Article article) {
@@ -89,7 +89,7 @@ public class ArticleRepository {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            articleDao.deleteAllArticles();
+            articleDao.deleteAllRetrievedArticles();
             return null;
         }
     }

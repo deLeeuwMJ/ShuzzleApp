@@ -21,10 +21,10 @@ public interface ArticleDao {
     @Delete
     void delete(Article article);
 
-    @Query("DELETE FROM article_table")
-    void deleteAllArticles();
+    @Query("DELETE FROM retrieved_table")
+    void deleteAllRetrievedArticles();
 
-    @Query("SELECT * FROM article_table ORDER BY id DESC")
-    LiveData<List<Article>> getAllArticles();
+    @Query("SELECT * FROM retrieved_table ORDER BY id desc")
+    LiveData<List<Article>> getAllRetrievedArticles();
 
 }

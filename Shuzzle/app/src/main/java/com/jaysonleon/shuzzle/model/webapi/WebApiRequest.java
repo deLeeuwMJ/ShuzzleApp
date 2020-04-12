@@ -1,4 +1,4 @@
-package com.jaysonleon.shuzzle.model;
+package com.jaysonleon.shuzzle.model.webapi;
 
 public class WebApiRequest {
 

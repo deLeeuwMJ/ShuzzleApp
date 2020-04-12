@@ -3,8 +3,8 @@ package com.jaysonleon.shuzzle.util;
 import android.content.Context;
 
 import com.jaysonleon.shuzzle.controllers.article.WebApiListener;
-import com.jaysonleon.shuzzle.model.WebApiRequest;
-import com.jaysonleon.shuzzle.model.article.WebApi;
+import com.jaysonleon.shuzzle.model.webapi.WebApiRequest;
+import com.jaysonleon.shuzzle.model.webapi.WebApi;
 
 public class ArticleUtil {
 

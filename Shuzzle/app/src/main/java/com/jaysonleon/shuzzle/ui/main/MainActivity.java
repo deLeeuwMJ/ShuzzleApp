@@ -2,7 +2,6 @@ package com.jaysonleon.shuzzle.ui.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -14,10 +13,14 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.textview.MaterialTextView;
 import com.jaysonleon.shuzzle.R;
 import com.jaysonleon.shuzzle.controllers.article.WebApiListener;
-import com.jaysonleon.shuzzle.model.WebApiRequest;
+import com.jaysonleon.shuzzle.model.gallery.SavedArticle;
+import com.jaysonleon.shuzzle.model.gallery.SavedArticleViewModel;
+import com.jaysonleon.shuzzle.model.webapi.WebApiRequest;
 import com.jaysonleon.shuzzle.model.article.Article;
 import com.jaysonleon.shuzzle.model.article.ArticleViewModel;
+import com.jaysonleon.shuzzle.model.subreddit.CategoryEnum;
 import com.jaysonleon.shuzzle.util.ArticleUtil;
+import com.jaysonleon.shuzzle.util.SubRedditUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -28,7 +31,9 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private ArticleViewModel articleViewModel;
+    private SavedArticleViewModel savedArticleViewModel;
     private List<Article> dataSet;
+    private List<SavedArticle> savedDataSet;
     private PhotoView image_v;
     private MaterialTextView title_tv;
     private AppCompatImageButton left_ib, right_ib;
@@ -41,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
 
         this.currentImageId = -1;
         this.dataSet = new LinkedList<>();
+        this.savedDataSet = new LinkedList<>();
         this.image_v = findViewById(R.id.main_rounded_image);
         this.title_tv = findViewById(R.id.main_picture_title);
         this.left_ib = findViewById(R.id.main_left_image_button);
@@ -50,7 +56,9 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
         this.right_ib.setOnClickListener(MainActivity.this);
 
         this.articleViewModel = ViewModelProviders.of(this).get(ArticleViewModel.class);
+        this.savedArticleViewModel = ViewModelProviders.of(this).get(SavedArticleViewModel.class);
         this.articleViewModel.deleteAllEvents();
+        this.savedArticleViewModel.deleteAllEvents();
     }
 
     @Override
@@ -61,6 +69,13 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
             @Override
             public void onChanged(List<Article> articles) {
                 dataSet = articles;
+            }
+        });
+
+        this.savedArticleViewModel.getAllEvents().observe(this, new Observer<List<SavedArticle>>() {
+            @Override
+            public void onChanged(List<SavedArticle> articles) {
+                savedDataSet = articles;
             }
         });
     }
@@ -76,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
 
         for (Article article : articles) {
             this.articleViewModel.insert(article);
-            Log.i(TAG, article.getUrl());
+//            Log.i(TAG, article.getUrl());
         }
     }
 
@@ -98,16 +113,25 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
                     this.articleViewModel.delete(dataSet.get(currentImageId));
                     this.dataSet.remove(currentImageId);
                 }
-                this.currentImageId++;
-                updateData();
-                checkApiRequest();
                 break;
             case R.id.main_right_image_button:
-                this.currentImageId++;
-                updateData();
-                checkApiRequest();
+                if (this.dataSet.size() > 3 && this.dataSet.size() - this.currentImageId >= 3) {
+                    Article tempArticle = this.dataSet.get(currentImageId);
+
+                    this.savedArticleViewModel.insert(
+                            new SavedArticle(
+                                    tempArticle.getSubreddit(),
+                                    tempArticle.getTitle(),
+                                    tempArticle.getCreated(),
+                                    tempArticle.getUrl(),
+                                    tempArticle.getImage()
+                    ));
+                }
                 break;
         }
+        this.currentImageId++;
+        updateData();
+        checkApiRequest();
     }
 
     private void updateData() {
@@ -127,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
         if (this.dataSet.size() - this.currentImageId <= 5) {
             ArticleUtil.requestApiData(
                     new WebApiRequest(
-                            "gonewild30plus+wivesharing+hotwife+slutwife+gonewildcurvy",
+                            SubRedditUtil.retrieveSubReddits(MainActivity.this, CategoryEnum.NATURE),
                             "",
                             "random",
                             50

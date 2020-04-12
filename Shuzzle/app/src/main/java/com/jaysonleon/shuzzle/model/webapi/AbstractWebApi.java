@@ -1,10 +1,11 @@
-package com.jaysonleon.shuzzle.model.article;
+package com.jaysonleon.shuzzle.model.webapi;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.jaysonleon.shuzzle.controllers.article.WebApiListener;
+import com.jaysonleon.shuzzle.model.article.ArticleFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
