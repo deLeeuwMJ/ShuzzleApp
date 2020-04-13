@@ -35,16 +35,21 @@ import com.jaysonleon.shuzzle.model.post.PostViewModel;
 import com.jaysonleon.shuzzle.model.subreddit.CategoryEnum;
 import com.jaysonleon.shuzzle.ui.gallery.GalleryActivity;
 import com.jaysonleon.shuzzle.util.PostUtil;
+import com.jaysonleon.shuzzle.util.SharedPreferencesUtil;
 import com.jaysonleon.shuzzle.util.SnackbarUtil;
 import com.jaysonleon.shuzzle.util.SubRedditUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements WebApiListener, View.OnClickListener, RequestListener<Drawable> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private final String SP_TAG = "FILTER_SETTINGS";
+    private final String CAT_FILTER_TAG = "CATEGORY_FILTER";
+
     private PostViewModel postViewModel;
     private SavedPostViewModel savedPostViewModel;
     private List<Post> dataSet;
@@ -88,19 +93,19 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
         this.savedPostViewModel = ViewModelProviders.of(this).get(SavedPostViewModel.class);
         this.postViewModel.deleteAll();
 
+        filterButtonActive = false;
+        setFilterSpinner();
+
         this.webApiRequest = new WebApiRequest(
                 SubRedditUtil.retrieveSubReddits(
                         MainActivity.this,
-                        CategoryEnum.MAN_MADE
+                        CategoryEnum.valueOf(((CategoryEnum)spinner.getSelectedItem()).name())
                 ),
                 "",
                 "new",
                 25,
                 ""
         );
-
-        filterButtonActive = false;
-        setFilterSpinner();
     }
 
     @Override
@@ -108,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
         super.onStart();
         checkApiRequest();
 
-        this.postViewModel.getList().observe(this, new Observer<List<Post>>() {
+        this.postViewModel.getList().observe(MainActivity.this, new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> posts) {
                 dataSet = posts;
@@ -156,6 +161,8 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
             case R.id.main_filter_button:
                 String selected = ((CategoryEnum)spinner.getSelectedItem()).name();
                 Log.i(TAG, selected);
+
+                SharedPreferencesUtil.set(MainActivity.this, CAT_FILTER_TAG, selected, SP_TAG);
 
                 webApiRequest.setSubreddit(
                         SubRedditUtil.retrieveSubReddits(
@@ -217,7 +224,17 @@ public class MainActivity extends AppCompatActivity implements WebApiListener, V
         final ArrayAdapter<CategoryEnum> arrayAdapter = new ArrayAdapter<CategoryEnum>(this, android.R.layout.simple_spinner_item, CategoryEnum.values());
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
-        spinner.setSelection(0);
+
+        String storedCategory = SharedPreferencesUtil.get(MainActivity.this, CAT_FILTER_TAG, SP_TAG);
+        CategoryEnum chosenCategory;
+
+        if (storedCategory != null){
+            chosenCategory = CategoryEnum.valueOf(storedCategory);
+        } else {
+            chosenCategory = CategoryEnum.MAN_MADE;
+        }
+
+        spinner.setSelection(arrayAdapter.getPosition(chosenCategory));
     }
 
     private void updateData() {

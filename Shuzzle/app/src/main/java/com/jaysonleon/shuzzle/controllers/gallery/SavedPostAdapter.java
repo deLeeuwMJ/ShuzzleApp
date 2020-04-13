@@ -96,6 +96,7 @@ public class SavedPostAdapter extends RecyclerView.Adapter<SavedPostAdapter.Imag
         });
 
         ivDownload.setOnClickListener(v -> {
+            popup.dismissNow();
             BitmapDrawable bd = (BitmapDrawable) pv.getDrawable();
             Bitmap bitmap = bd.getBitmap();
 
@@ -124,7 +125,6 @@ public class SavedPostAdapter extends RecyclerView.Adapter<SavedPostAdapter.Imag
             } else {
                 SnackbarUtil.showSnackBar(ActivityUtil.getActivity(context), "Image not saved to device : permission denied");
             }
-            popup.dismissNow();
         });
     }
 
