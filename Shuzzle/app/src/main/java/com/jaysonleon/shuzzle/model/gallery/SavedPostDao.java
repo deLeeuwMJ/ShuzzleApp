@@ -7,26 +7,24 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.jaysonleon.shuzzle.model.article.Article;
-
 import java.util.List;
 
 @Dao
-public interface SavedArticleDao {
+public interface SavedPostDao {
 
     @Insert
-    void insert(SavedArticle article);
+    void insert(SavedPost post);
 
     @Update
-    void update(SavedArticle article);
+    void update(SavedPost post);
 
     @Delete
-    void delete(SavedArticle article);
+    void delete(SavedPost post);
 
     @Query("DELETE FROM saved_table")
-    void deleteAllSavedArticles();
+    void deleteAll();
 
     @Query("SELECT * FROM saved_table ORDER BY id asc")
-    LiveData<List<SavedArticle>> getAllSavedArticles();
+    LiveData<List<SavedPost>> getAll();
 
 }

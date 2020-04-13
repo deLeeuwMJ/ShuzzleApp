@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.jaysonleon.shuzzle.controllers.article.WebApiListener;
-import com.jaysonleon.shuzzle.model.article.ArticleFactory;
+import com.jaysonleon.shuzzle.controllers.webapi.WebApiListener;
+import com.jaysonleon.shuzzle.model.post.PostFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,11 +15,11 @@ public abstract class AbstractWebApi extends AsyncTask<Void, Void, Void> {
     private static final String TAG = AbstractWebApi.class.getSimpleName();
 
     protected ArrayList<WebApiListener> _aListeners = new ArrayList();
-    protected ArticleFactory articleFactory;
+    protected PostFactory postFactory;
 
     protected AbstractWebApi(Context context, WebApiListener listener) {
         this.registerListener(listener);
-        this.articleFactory = new ArticleFactory(context, listener);
+        this.postFactory = new PostFactory(context, listener);
     }
 
     public void registerListener(WebApiListener mListener) {
@@ -48,7 +48,7 @@ public abstract class AbstractWebApi extends AsyncTask<Void, Void, Void> {
 
     protected Void doInBackground(Void... voids) {
         String url = this.constructURL();
-        this.articleFactory.getEvents(url);
+        this.postFactory.getContent(url);
         Log.d(TAG, url);
 
         return null;

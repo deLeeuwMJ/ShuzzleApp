@@ -2,11 +2,11 @@ package com.jaysonleon.shuzzle.util;
 
 import android.content.Context;
 
-import com.jaysonleon.shuzzle.controllers.article.WebApiListener;
+import com.jaysonleon.shuzzle.controllers.webapi.WebApiListener;
 import com.jaysonleon.shuzzle.model.webapi.WebApiRequest;
 import com.jaysonleon.shuzzle.model.webapi.WebApi;
 
-public class ArticleUtil {
+public class PostUtil {
 
     public static synchronized void requestApiData(WebApiRequest webApiRequest, WebApiListener webApiListener, Context context) {
 
@@ -17,6 +17,7 @@ public class ArticleUtil {
                 .title(webApiRequest.getTitle())
                 .sort(webApiRequest.getSort())
                 .limit(webApiRequest.getLimit())
+                .after(webApiRequest.getAfter())
                 .build();
 
         if(webApi != null)

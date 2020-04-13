@@ -6,23 +6,21 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
 @Entity(tableName = "saved_table")
-public class SavedArticle implements Serializable {
+public class SavedPost implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    private String subreddit;
     private String title;
     private int created;
     private String url;
-    private String image;
+    private String name;
 
-    public SavedArticle(String subreddit, String title, int created, String url, String image) {
-        this.subreddit = subreddit;
+    public SavedPost(String title, int created, String url, String name) {
         this.title = title;
         this.created = created;
         this.url = url;
-        this.image = image;
+        this.name = name;
     }
 
     public void setId(int id) {
@@ -31,10 +29,6 @@ public class SavedArticle implements Serializable {
 
     public int getId() {
         return id;
-    }
-
-    public String getSubreddit() {
-        return subreddit;
     }
 
     public String getTitle() {
@@ -49,7 +43,7 @@ public class SavedArticle implements Serializable {
         return url;
     }
 
-    public String getImage() {
-        return image;
+    public String getName() {
+        return name;
     }
 }

@@ -1,4 +1,4 @@
-package com.jaysonleon.shuzzle.model.article;
+package com.jaysonleon.shuzzle.model.post;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -6,23 +6,21 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
 @Entity(tableName = "retrieved_table")
-public class Article implements Serializable {
+public class Post implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    private String subreddit;
     private String title;
     private int created;
     private String url;
-    private String image;
+    private String name;
 
-    public Article(String subreddit, String title, int created, String url, String image) {
-        this.subreddit = subreddit;
+    public Post(String title, int created, String url, String name) {
         this.title = title;
         this.created = created;
         this.url = url;
-        this.image = image;
+        this.name = name;
     }
 
     public void setId(int id) {
@@ -31,10 +29,6 @@ public class Article implements Serializable {
 
     public int getId() {
         return id;
-    }
-
-    public String getSubreddit() {
-        return subreddit;
     }
 
     public String getTitle() {
@@ -49,7 +43,7 @@ public class Article implements Serializable {
         return url;
     }
 
-    public String getImage() {
-        return image;
+    public String getName() {
+        return name;
     }
 }

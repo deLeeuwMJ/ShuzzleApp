@@ -5,7 +5,8 @@ public enum CategoryEnum {
     ART("Art"),
     ANIMALS("Animals"),
     NATURE("Nature"),
-    FOOD("Food");
+    FOOD("Food"),
+    NSFW("Nsfw");
 
     private String categoryName;
 

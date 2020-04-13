@@ -3,7 +3,7 @@ package com.jaysonleon.shuzzle.model.webapi;
 import android.content.Context;
 import android.util.Log;
 
-import com.jaysonleon.shuzzle.controllers.article.WebApiListener;
+import com.jaysonleon.shuzzle.controllers.webapi.WebApiListener;
 
 public class WebApi extends AbstractWebApi {
 
@@ -14,6 +14,7 @@ public class WebApi extends AbstractWebApi {
     private final String title;
     private final String sort;
     private final int limit;
+    private final String after;
 
     private WebApi(WebApi.Builder builder) {
         super(builder.context, builder.listener);
@@ -21,6 +22,7 @@ public class WebApi extends AbstractWebApi {
         this.title = builder.title;
         this.sort = builder.sort;
         this.limit = builder.limit;
+        this.after = builder.after;
     }
 
     @Override
@@ -30,6 +32,7 @@ public class WebApi extends AbstractWebApi {
         stringBuilder.append("&title=" + this.title);
         stringBuilder.append("&sort=" + this.sort);
         stringBuilder.append("&limit=" + this.limit);
+        stringBuilder.append("&after=" + this.after);
 
         return stringBuilder.toString();
     }
@@ -41,6 +44,7 @@ public class WebApi extends AbstractWebApi {
         private String title;
         private String sort;
         private int limit;
+        private String after;
 
         public Builder() {
             this.listener = null;
@@ -49,6 +53,7 @@ public class WebApi extends AbstractWebApi {
             this.title = null;
             this.sort = null;
             this.limit = 0;
+            this.after = null;
         }
 
         public WebApi.Builder withListener(WebApiListener listener) {
@@ -81,6 +86,11 @@ public class WebApi extends AbstractWebApi {
             return this;
         }
 
+        public WebApi.Builder after(String after) {
+            this.after = after;
+            return this;
+        }
+
         public WebApi build() {
             if (this.limit <= 0 || this.limit > 100) {
                 Log.e(BUILD_ERROR, "Limit must be between 1 and 100");
@@ -90,9 +100,6 @@ public class WebApi extends AbstractWebApi {
                 return null;
             } else if (this.subreddit == null) {
                 Log.e(BUILD_ERROR, "Subreddit can't be null");
-                return null;
-            } else if (this.title == null) {
-                Log.e(BUILD_ERROR, "Title can't be null");
                 return null;
             } else if (this.sort == null) {
                 Log.e(BUILD_ERROR, "Sort can't be null");

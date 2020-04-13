@@ -31,13 +31,15 @@ public class SubRedditUtil {
             case MAN_MADE:
                 subRedditsArray = res.getStringArray(R.array.Category_ManMade);
                 break;
+            case NSFW:
+                subRedditsArray = res.getStringArray(R.array.Category_Nsfw);
+                break;
         }
 
         /* If somehow to values didn't get assigned properly return null */
         if(subRedditsArray.length == 0){
             return null;
         }
-
 
         /* Loop througharray and make one long string with all subreddits in the chosen category */
         for(int i = 0; i< subRedditsArray.length; i++){

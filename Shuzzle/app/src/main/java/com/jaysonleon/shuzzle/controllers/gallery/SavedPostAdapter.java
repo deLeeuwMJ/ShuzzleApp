@@ -12,23 +12,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.jaysonleon.shuzzle.R;
-import com.jaysonleon.shuzzle.model.gallery.SavedArticle;
-import com.jaysonleon.shuzzle.model.gallery.SavedArticleViewModel;
+import com.jaysonleon.shuzzle.model.gallery.SavedPost;
+import com.jaysonleon.shuzzle.model.gallery.SavedPostViewModel;
 import com.jaysonleon.shuzzle.util.ActivityUtil;
 import com.jaysonleon.shuzzle.util.SnackbarUtil;
 
@@ -44,17 +40,17 @@ import rm.com.longpresspopup.LongPressPopup;
 import rm.com.longpresspopup.LongPressPopupBuilder;
 import rm.com.longpresspopup.PopupInflaterListener;
 
-public class SavedArticleAdapter extends RecyclerView.Adapter<SavedArticleAdapter.ImageViewHolder> implements PopupInflaterListener {
+public class SavedPostAdapter extends RecyclerView.Adapter<SavedPostAdapter.ImageViewHolder> implements PopupInflaterListener {
 
-    private SavedArticleViewModel savedArticleViewModel;
-    private List<SavedArticle> dataSet;
+    private SavedPostViewModel savedPostViewModel;
+    private List<SavedPost> dataSet;
     private LongPressPopup popup;
     private Context context;
 
-    public SavedArticleAdapter(Context context, SavedArticleViewModel savedArticleViewModel) {
+    public SavedPostAdapter(Context context, SavedPostViewModel savedPostViewModel) {
         this.dataSet = new LinkedList<>();
         this.context = context;
-        this.savedArticleViewModel = savedArticleViewModel;
+        this.savedPostViewModel = savedPostViewModel;
     }
 
     @NonNull
@@ -76,25 +72,25 @@ public class SavedArticleAdapter extends RecyclerView.Adapter<SavedArticleAdapte
         return dataSet.size();
     }
 
-    public void submitList(List<SavedArticle> articles) {
+    public void submitList(List<SavedPost> articles) {
         this.dataSet = articles;
     }
 
     @Override
     public void onViewInflated(@Nullable String popupTag, View root) {
-        SavedArticle savedArticle = dataSet.get(Integer.parseInt(popupTag));
+        SavedPost savedPost = dataSet.get(Integer.parseInt(popupTag));
 
         PhotoView pv =  root.findViewById(R.id.preview_image);
         MaterialTextView tv = root.findViewById(R.id.preview_text);
         AppCompatImageButton ivDelete = root.findViewById(R.id.preview_delete_button);
         AppCompatImageButton ivDownload = root.findViewById(R.id.preview_download_button);
 
-        Glide.with(context).load(savedArticle.getUrl()).into(pv);
-        tv.setText(savedArticle.getSubreddit());
+        Glide.with(context).load(savedPost.getUrl()).into(pv);
+        tv.setText(savedPost.getTitle());
 
         ivDelete.setOnClickListener(v -> {
-            savedArticleViewModel.delete(savedArticle);
-            dataSet.remove(savedArticle);
+            savedPostViewModel.delete(savedPost);
+            dataSet.remove(savedPost);
             SnackbarUtil.showSnackBar(ActivityUtil.getActivity(context), "Image removed from gallery");
             popup.dismissNow();
         });
@@ -134,22 +130,24 @@ public class SavedArticleAdapter extends RecyclerView.Adapter<SavedArticleAdapte
 
     class ImageViewHolder extends RecyclerView.ViewHolder {
         ImageView picture;
-        PhotoView preview;
 
         ImageViewHolder(View itemview, int i) {
             super(itemview);
             picture = itemview.findViewById(R.id.gallery_image);
-            preview = itemview.findViewById(R.id.preview_image);
 
             itemview.setOnLongClickListener(v -> {
                 popup = new LongPressPopupBuilder(context)
                         .setTarget(picture)
-                        .setPopupView(R.layout.gallery_quickview, SavedArticleAdapter.this)
+                        .setPopupView(R.layout.gallery_quickview, SavedPostAdapter.this)
+                        .setLongPressDuration(250)
                         .setDismissOnLongPressStop(false)
+                        .setDismissOnTouchOutside(true)
+                        .setDismissOnBackPressed(true)
                         .setAnimationType(LongPressPopup.ANIMATION_TYPE_FROM_CENTER)
                         .setTag(String.valueOf(ImageViewHolder.super.getAdapterPosition()))
                         .build();
 
+                popup.register();
                 popup.showNow();
                 return false;
             });

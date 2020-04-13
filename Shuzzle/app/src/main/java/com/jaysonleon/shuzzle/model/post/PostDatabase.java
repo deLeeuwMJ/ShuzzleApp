@@ -1,4 +1,4 @@
-package com.jaysonleon.shuzzle.model.article;
+package com.jaysonleon.shuzzle.model.post;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -9,21 +9,21 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.jaysonleon.shuzzle.model.gallery.SavedArticle;
-import com.jaysonleon.shuzzle.model.gallery.SavedArticleDao;
+import com.jaysonleon.shuzzle.model.gallery.SavedPost;
+import com.jaysonleon.shuzzle.model.gallery.SavedPostDao;
 
-@Database(entities = {Article.class, SavedArticle.class}, version = 1, exportSchema = false)
-public abstract class ArticleDatabase extends RoomDatabase {
+@Database(entities = {Post.class, SavedPost.class}, version = 1, exportSchema = false)
+public abstract class PostDatabase extends RoomDatabase {
 
-    private static ArticleDatabase instance;
+    private static PostDatabase instance;
 
-    public abstract ArticleDao retrievedDao();
-    public abstract SavedArticleDao savedDao();
+    public abstract PostDao postDao();
+    public abstract SavedPostDao savedDao();
 
-    public static synchronized ArticleDatabase getInstance(Context context) {
+    public static synchronized PostDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                    ArticleDatabase.class, "article_database")
+                    PostDatabase.class, "shuzzle_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
                     .build();
@@ -40,11 +40,11 @@ public abstract class ArticleDatabase extends RoomDatabase {
     };
 
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
-        private ArticleDao retrievedDao;
-        private SavedArticleDao savedDao;
+        private PostDao postDao;
+        private SavedPostDao savedDao;
 
-        private PopulateDbAsyncTask(ArticleDatabase db) {
-            retrievedDao = db.retrievedDao();
+        private PopulateDbAsyncTask(PostDatabase db) {
+            postDao = db.postDao();
             savedDao = db.savedDao();
         }
 
