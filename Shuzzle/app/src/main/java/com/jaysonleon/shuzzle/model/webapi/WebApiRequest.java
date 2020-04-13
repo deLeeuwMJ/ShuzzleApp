@@ -29,4 +29,8 @@ public class WebApiRequest {
     public int getLimit() {
         return limit;
     }
+
+    public void setSubreddit(String subreddit) {
+        this.subreddit = subreddit;
+    }
 }
